@@ -8,7 +8,44 @@ body {
 }
 
 .game-container {
+    position: relative;
     border: 1px solid #000;
+}
+
+#gameOverMenu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#gameOverMenu h2 {
+    margin-top: 0;
+}
+
+#gameOverMenu button, #gameOverMenu .button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    color: white;
+    background-color: #4CAF50;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+}
+
+#gameOverMenu button:hover, #gameOverMenu .button:hover {
+    background-color: #45a049;
+}
+
+.hidden {
+    display: none;
 }
 
 .home-container {

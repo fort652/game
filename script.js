@@ -1,5 +1,7 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const gameOverMenu = document.getElementById('gameOverMenu');
+const restartButton = document.getElementById('restartButton');
 
 // Game variables
 let bird;
@@ -21,21 +23,14 @@ function setup() {
     pipes = [];
     score = 0;
     gameover = false;
-    // Add a pipe every 100 frames
     frames = 0;
+    gameOverMenu.classList.add('hidden');
 }
 
 function draw() {
     // Background
     ctx.fillStyle = "#70c5ce";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    if (gameover) {
-        ctx.fillStyle = "black";
-        ctx.font = "30px Arial";
-        ctx.fillText("Game Over", canvas.width / 2 - 80, canvas.height / 2);
-        return;
-    }
 
     // Bird
     ctx.fillStyle = "#fddb63";
@@ -58,7 +53,9 @@ function draw() {
 }
 
 function update() {
-    if (gameover) return;
+    if (gameover) {
+        return;
+    }
 
     // Bird
     bird.velocity += gravity;
@@ -78,9 +75,20 @@ function update() {
         pipes.shift();
     }
 
+    // Score
+    for (let i = 0; i < pipes.length; i++) {
+        let p = pipes[i];
+        if (p.x + p.width < birdX && !p.scored) {
+            score++;
+            p.scored = true;
+        }
+    }
+
+    frames++;
+
     // Collision detection
     // Ground
-    if (bird.y > canvas.height - 12) {
+    if (bird.y + 12 > canvas.height) { // bird radius is 12
         gameover = true;
     }
     // Pipes
@@ -92,17 +100,9 @@ function update() {
         }
     }
 
-    // Score
-    for (let i = 0; i < pipes.length; i++) {
-        let p = pipes[i];
-        if (p.x + p.width < birdX && !p.scored) {
-            score++;
-            p.scored = true;
-        }
+    if (gameover) {
+        gameOverMenu.classList.remove('hidden');
     }
-
-
-    frames++;
 }
 
 function gameLoop() {
@@ -113,22 +113,21 @@ function gameLoop() {
 
 document.addEventListener('keydown', function(event) {
     if (event.code === 'Space') {
-        if(gameover) {
-            setup();
-        } else {
+        if (!gameover) {
             bird.velocity = jump;
         }
     }
 });
 
 canvas.addEventListener('click', function(event) {
-    if(gameover) {
-        setup();
-    } else {
+    if (!gameover) {
         bird.velocity = jump;
     }
 });
 
+restartButton.addEventListener('click', function() {
+    setup();
+});
 
 setup();
 gameLoop();
